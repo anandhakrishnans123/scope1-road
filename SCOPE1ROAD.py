@@ -41,11 +41,9 @@ def map_and_process_data(merged_data, template_columns, column_mapping, specific
 # Function to save DataFrame as an Excel file in memory
 def save_to_excel(df):
     output = BytesIO()
-    writer = pd.ExcelWriter(output, engine='xlsxwriter')
-    df.to_excel(writer, index=False, sheet_name='Sheet1')
-    writer.save()
-    processed_data = output.getvalue()
-    return processed_data
+    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+        df.to_excel(writer, index=False, sheet_name='Sheet1')
+    return output.getvalue()
 
 # Streamlit app layout
 st.title('Excel Data Processor for Road Freight')
