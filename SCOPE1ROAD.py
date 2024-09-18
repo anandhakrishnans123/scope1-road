@@ -65,23 +65,24 @@ template_columns = [
     'CF Standard', 'Fuel Type', 'GAS Type', 'Res_Date'
 ]
 
-# Column mapping dictionary
-column_mapping = {
-    'Country': 'Country',
-    'City': 'City',
-    'Facility': 'Office / Factory / Site / Location',
-    'Vehicle Type': 'Vehicle Type',
-    'Vehicle Number': 'Vehicle Number',
-    'Start Date': 'Start Date',
-    'End Date': 'End Date',
-    'Fuel Consumed': 'Fuel Consumed (Litres)',
-    'Distance Travelled': 'Distance Covered (Km)',
-}
-
 # Process if the file is uploaded
 if uploaded_file:
     # Load data from the uploaded file
     merged_data = load_and_merge_sheets(uploaded_file, [x.strip() for x in specified_sheets.split(',')])
+
+    st.write("Select columns for mapping:")
+    
+    # Create dynamic column selection
+    column_mapping = {}
+    column_mapping['Country'] = st.selectbox('Select column for Country', merged_data.columns)
+    column_mapping['City'] = st.selectbox('Select column for City', merged_data.columns)
+    column_mapping['Facility'] = st.selectbox('Select column for Facility', merged_data.columns)
+    column_mapping['Vehicle Type'] = st.selectbox('Select column for Vehicle Type', merged_data.columns)
+    column_mapping['Vehicle Number'] = st.selectbox('Select column for Vehicle Number', merged_data.columns)
+    column_mapping['Start Date'] = st.selectbox('Select column for Start Date', merged_data.columns)
+    column_mapping['End Date'] = st.selectbox('Select column for End Date', merged_data.columns)
+    column_mapping['Fuel Consumed'] = st.selectbox('Select column for Fuel Consumed', merged_data.columns)
+    column_mapping['Distance Travelled'] = st.selectbox('Select column for Distance Travelled', merged_data.columns)
 
     # Map and process the data
     final_data = map_and_process_data(merged_data, template_columns, column_mapping, specific_date)
