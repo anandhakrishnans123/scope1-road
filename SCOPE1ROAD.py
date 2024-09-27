@@ -103,6 +103,10 @@ if uploaded_file:
     # Display the processed data
     st.write("Processed Data:")
     st.dataframe(final_data)
+    # Reorder the final_data columns
+    final_data = final_data[['Res_Date', 'Country', 'City', 'Facility', 'Vehicle Type', 'Fuel Type', 'Vehicle Number', 
+                         'Start Date', 'End Date', 'Fuel Consumed', 'Distance Travelled', 'CF Standard', 'GAS Type']]
+
 
     # Create an in-memory Excel file for download
     excel_data = save_to_excel(final_data)
