@@ -104,8 +104,7 @@ if uploaded_file:
     st.write("Processed Data:")
     st.dataframe(final_data)
     # Reorder the final_data columns
-    final_data = final_data[['Res_Date', 'Country', 'City', 'Facility', 'Vehicle Type', 'Fuel Type', 'Vehicle Number', 
-                         'Start Date', 'End Date', 'Fuel Consumed', 'Distance Travelled', 'CF Standard', 'GAS Type']]
+    
 
 
     # Create an in-memory Excel file for download
@@ -117,6 +116,8 @@ if uploaded_file:
     # Save the processed data to the user-specified path
     output_file_path = st.text_input("Enter the path to save the file", "/content/TW MAPPED DATA/ENVIORNMENT/SCOPE1/FZE/Road.xlsx")
     if st.button("Save to file"):
+        final_data = final_data[['Res_Date', 'Country', 'City', 'Facility', 'Vehicle Type', 'Fuel Type', 'Vehicle Number', 
+                         'Start Date', 'End Date', 'Fuel Consumed', 'Distance Travelled', 'CF Standard', 'GAS Type']]
         final_data.to_excel(output_file_path, index=False)
         st.success(f"Data successfully written to {output_file_path}")
 
