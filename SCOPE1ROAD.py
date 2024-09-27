@@ -87,25 +87,20 @@ if uploaded_file:
 
     # Create dynamic column selection with presets
     column_mapping = {}
-    column_mapping['Country'] = st.selectbox('Select column for Country', merged_data.columns, index=merged_data.columns.get_loc(preset_mapping['Country']) if preset_mapping['Country'] in merged_data.columns else 0)
-    column_mapping['City'] = st.selectbox('Select column for City', merged_data.columns, index=merged_data.columns.get_loc(preset_mapping['City']) if preset_mapping['City'] in merged_data.columns else 0)
-    column_mapping['Facility'] = st.selectbox('Select column for Facility', merged_data.columns, index=merged_data.columns.get_loc(preset_mapping['Facility']) if preset_mapping['Facility'] in merged_data.columns else 0)
-    column_mapping['Vehicle Type'] = st.selectbox('Select column for Vehicle Type', merged_data.columns, index=merged_data.columns.get_loc(preset_mapping['Vehicle Type']) if preset_mapping['Vehicle Type'] in merged_data.columns else 0)
-    column_mapping['Vehicle Number'] = st.selectbox('Select column for Vehicle Number', merged_data.columns, index=merged_data.columns.get_loc(preset_mapping['Vehicle Number']) if preset_mapping['Vehicle Number'] in merged_data.columns else 0)
-    column_mapping['Start Date'] = st.selectbox('Select column for Start Date', merged_data.columns, index=merged_data.columns.get_loc(preset_mapping['Start Date']) if preset_mapping['Start Date'] in merged_data.columns else 0)
-    column_mapping['End Date'] = st.selectbox('Select column for End Date', merged_data.columns, index=merged_data.columns.get_loc(preset_mapping['End Date']) if preset_mapping['End Date'] in merged_data.columns else 0)
-    column_mapping['Fuel Consumed'] = st.selectbox('Select column for Fuel Consumed', merged_data.columns, index=merged_data.columns.get_loc(preset_mapping['Fuel Consumed']) if preset_mapping['Fuel Consumed'] in merged_data.columns else 0)
-    column_mapping['Distance Travelled'] = st.selectbox('Select column for Distance Travelled', merged_data.columns, index=merged_data.columns.get_loc(preset_mapping['Distance Travelled']) if preset_mapping['Distance Travelled'] in merged_data.columns else 0)
+    for key in ['Country', 'City', 'Facility', 'Vehicle Type', 'Vehicle Number', 'Start Date', 'End Date', 'Fuel Consumed', 'Distance Travelled']:
+        default_index = merged_data.columns.get_loc(preset_mapping[key]) if preset_mapping[key] in merged_data.columns else 0
+        column_mapping[key] = st.selectbox(f'Select column for {key}', merged_data.columns, index=default_index)
 
     # Map and process the data
     final_data = map_and_process_data(merged_data, template_columns, column_mapping, specific_date)
 
+    # Reorder the final_data columns
+    final_data = final_data[['Res_Date', 'Country', 'City', 'Facility', 'Vehicle Type', 'Fuel Type', 'Vehicle Number', 
+                             'Start Date', 'End Date', 'Fuel Consumed', 'Distance Travelled', 'CF Standard', 'GAS Type']]
+
     # Display the processed data
     st.write("Processed Data:")
     st.dataframe(final_data)
-    # Reorder the final_data columns
-    
-
 
     # Create an in-memory Excel file for download
     excel_data = save_to_excel(final_data)
@@ -116,10 +111,11 @@ if uploaded_file:
     # Save the processed data to the user-specified path
     output_file_path = st.text_input("Enter the path to save the file", "/content/TW MAPPED DATA/ENVIORNMENT/SCOPE1/FZE/Road.xlsx")
     if st.button("Save to file"):
-        final_data = final_data[['Res_Date', 'Country', 'City', 'Facility', 'Vehicle Type', 'Fuel Type', 'Vehicle Number', 
-                         'Start Date', 'End Date', 'Fuel Consumed', 'Distance Travelled', 'CF Standard', 'GAS Type']]
-        final_data.to_excel(output_file_path, index=False)
-        st.success(f"Data successfully written to {output_file_path}")
+        try:
+            final_data.to_excel(output_file_path, index=False)
+            st.success(f"Data successfully written to {output_file_path}")
+        except Exception as e:
+            st.error(f"Error saving file: {e}")
 
 # Go Back button with JavaScript redirect
 if st.button("Go Back to home page"):
